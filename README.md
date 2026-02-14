@@ -1,36 +1,180 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+🔖 Bookmark Manager
 
-## Getting Started
+A full-stack real-time Bookmark Manager built with Next.js (App Router) and Supabase.
+Users can securely log in with Google, manage private bookmarks, and see real-time updates across multiple tabs.
 
-First, run the development server:
+🌐 Live Demo
 
-```bash
+Vercel Deployment:
+👉 https://bookmark-manager-three-psi.vercel.app
+
+📂 GitHub Repository
+
+👉 https://github.com/Dhanush41916/bookmark-manager
+
+📌 Overview
+
+This project demonstrates:
+
+Google OAuth authentication
+
+Row Level Security (RLS) with Supabase
+
+Real-time database updates
+
+Private user data isolation
+
+Production deployment using Vercel
+
+Each user can only see and manage their own bookmarks.
+
+🚀 Features
+
+✅ Google Sign-in (OAuth only, no email/password)
+
+✅ Add bookmark (Title + URL)
+
+✅ Delete own bookmarks
+
+✅ Real-time updates across tabs
+
+✅ Private data per user using RLS
+
+✅ Fully deployed on Vercel
+
+🧱 Tech Stack
+Frontend
+
+Next.js 16 (App Router)
+
+React
+
+Tailwind CSS
+
+Backend / Database
+
+Supabase
+
+Authentication (Google OAuth)
+
+PostgreSQL Database
+
+Row Level Security (RLS)
+
+Realtime Subscriptions
+
+Deployment
+
+Vercel
+
+🏗 Project Structure
+bookmark-manager/
+│
+├── app/
+│   ├── page.tsx
+│   ├── layout.tsx
+│   └── globals.css
+│
+├── lib/
+│   └── supabaseClient.ts
+│
+├── README.md
+└── package.json
+🔐 Authentication Flow
+
+User clicks Login with Google
+
+Supabase redirects to Google OAuth
+
+After authentication:
+
+User session is stored
+
+User data becomes available
+
+Session updates are handled using:
+
+getSession()
+
+onAuthStateChange()
+
+🗄 Database Design
+bookmarks table
+Column	Type	Description
+id	uuid	Primary Key
+user_id	uuid	Linked to auth user
+title	text	Bookmark title
+url	text	Bookmark URL
+created_at	timestamp	Auto-generated
+🔒 Row Level Security (RLS)
+
+Security policies ensure:
+
+Users can only insert bookmarks where auth.uid() = user_id
+
+Users can only select their own bookmarks
+
+Users can only delete their own bookmarks
+
+This guarantees data isolation between users.
+
+⚡ Real-Time Implementation
+
+Supabase Realtime is used to:
+
+Subscribe to changes in the bookmarks table
+
+Automatically update UI across multiple tabs
+
+No manual page refresh required
+
+🛠 Setup Instructions (Local Development)
+
+Clone the repo:
+
+git clone https://github.com/Dhanush41916/bookmark-manager.git
+
+Install dependencies:
+
+npm install
+
+Create .env.local:
+
+NEXT_PUBLIC_SUPABASE_URL=your_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_publishable_key
+
+Run:
+
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+⚠️ Challenges Faced
+1️⃣ OAuth Redirect Loop
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Issue: Login was redirecting back to login page repeatedly.
+Solution: Corrected Google OAuth redirect URL and cleared local storage session.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+2️⃣ 401 Unauthorized Error
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Issue: Supabase returned unauthorized on /auth/v1/user.
+Solution: Fixed incorrect project URL and publishable key in supabaseClient.ts.
 
-## Learn More
+3️⃣ RLS Policy Conflict
 
-To learn more about Next.js, take a look at the following resources:
+Issue: Policy already existed while creating SQL.
+Solution: Dropped or reused existing policy instead of recreating.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+📈 What This Project Demonstrates
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Understanding of OAuth flows
 
-## Deploy on Vercel
+Secure database design using RLS
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Real-time frontend updates
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Deployment readiness
+
+Debugging production auth issues
+
+👨‍💻 Author
+
+Dhanush Peta
+GitHub: https://github.com/Dhanush41916
