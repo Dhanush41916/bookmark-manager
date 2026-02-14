@@ -1,59 +1,31 @@
 🔖 Bookmark Manager
 
-A full-stack real-time Bookmark Manager built with Next.js (App Router) and Supabase.
-Users can securely log in with Google, manage private bookmarks, and see real-time updates across multiple tabs.
+A production-ready full-stack real-time Bookmark Manager built with Next.js (App Router) and Supabase.
 
-🌐 Live Demo
+This application demonstrates secure authentication, row-level data isolation, real-time database updates, and deployment on Vercel.
 
-Vercel Deployment:
+🚀 Live Demo
+
+Deployed on Vercel:
 👉 https://bookmark-manager-three-psi.vercel.app
 
-📂 GitHub Repository
+📌 Project Objective
 
-👉 https://github.com/Dhanush41916/bookmark-manager
+Build and deploy a real-time bookmark manager that:
 
-📌 Overview
+Supports Google OAuth only
 
-This project demonstrates:
+Allows authenticated users to add and delete bookmarks
 
-Google OAuth authentication
+Ensures strict data privacy per user
 
-Row Level Security (RLS) with Supabase
+Updates bookmark list in real-time across multiple tabs
 
-Real-time database updates
+Is deployed and publicly accessible
 
-Private user data isolation
+🧠 Technical Overview
 
-Production deployment using Vercel
-
-Each user can only see and manage their own bookmarks.
-
-🚀 Features
-
-✅ Google Sign-in (OAuth only, no email/password)
-
-✅ Add bookmark (Title + URL)
-
-✅ Delete own bookmarks
-
-✅ Real-time updates across tabs
-
-✅ Private data per user using RLS
-
-✅ Fully deployed on Vercel
-
-🧱 Tech Stack
-Frontend
-
-Next.js 16 (App Router)
-
-React
-
-Tailwind CSS
-
-Backend / Database
-
-Supabase
+This project uses Supabase for:
 
 Authentication (Google OAuth)
 
@@ -61,81 +33,125 @@ PostgreSQL Database
 
 Row Level Security (RLS)
 
-Realtime Subscriptions
+Real-time subscriptions
 
-Deployment
+The frontend is built using:
+
+Next.js (App Router architecture)
+
+React Hooks
+
+Tailwind CSS
+
+🛠 Tech Stack
+
+Frontend:
+
+Next.js 16 (App Router)
+
+React
+
+Tailwind CSS
+
+Backend:
+
+Supabase (Auth + Database + Realtime)
+
+PostgreSQL
+
+Deployment:
 
 Vercel
 
-🏗 Project Structure
-bookmark-manager/
-│
-├── app/
-│   ├── page.tsx
-│   ├── layout.tsx
-│   └── globals.css
-│
-├── lib/
-│   └── supabaseClient.ts
-│
-├── README.md
-└── package.json
-🔐 Authentication Flow
+🔐 Authentication
 
-User clicks Login with Google
+Google OAuth via Supabase
 
-Supabase redirects to Google OAuth
+No email/password authentication
 
-After authentication:
+Secure session handling using Supabase client
 
-User session is stored
+Automatic auth state tracking
 
-User data becomes available
+🗂 Database Design
 
-Session updates are handled using:
+Table: bookmarks
 
-getSession()
-
-onAuthStateChange()
-
-🗄 Database Design
-bookmarks table
 Column	Type	Description
 id	uuid	Primary Key
-user_id	uuid	Linked to auth user
+user_id	uuid	References authenticated user
 title	text	Bookmark title
 url	text	Bookmark URL
 created_at	timestamp	Auto-generated
 🔒 Row Level Security (RLS)
 
-Security policies ensure:
+RLS is enabled on the bookmarks table to ensure:
 
-Users can only insert bookmarks where auth.uid() = user_id
+Users can only read their own bookmarks
 
-Users can only select their own bookmarks
+Users can only insert their own bookmarks
 
 Users can only delete their own bookmarks
 
-This guarantees data isolation between users.
+Policies use:
 
-⚡ Real-Time Implementation
+auth.uid() = user_id
 
-Supabase Realtime is used to:
+This ensures complete data isolation between users.
 
-Subscribe to changes in the bookmarks table
+⚡ Real-Time Functionality
 
-Automatically update UI across multiple tabs
+The application subscribes to database changes using Supabase Realtime.
 
-No manual page refresh required
+If two browser tabs are open:
 
-🛠 Setup Instructions (Local Development)
+Adding a bookmark in one tab automatically updates the other.
 
-Clone the repo:
+Deleting a bookmark syncs instantly.
 
-git clone https://github.com/Dhanush41916/bookmark-manager.git
+No page refresh required.
 
-Install dependencies:
+📁 Project Structure
+bookmark-manager/
+│
+├── app/
+│   ├── layout.tsx
+│   └── page.tsx
+│
+├── lib/
+│   └── supabaseClient.ts
+│
+├── .env.local
+├── package.json
+└── README.md
+🚧 Problems Faced & Solutions
+1️⃣ OAuth Redirect Issues
 
+Problem: Google login looped or returned 401 errors.
+Solution: Correctly configured Redirect URLs in:
+
+Supabase Auth settings
+
+Google Cloud Console OAuth credentials
+
+2️⃣ RLS Policy Errors
+
+Problem: Policy already exists / blocked inserts.
+Solution: Ensured proper RLS setup and avoided duplicate policy creation.
+
+3️⃣ Invalid Supabase URL Error
+
+Problem: Placeholder values used in createClient.
+Solution: Configured proper environment variables and restarted dev server.
+
+4️⃣ Realtime Not Triggering
+
+Problem: Missing subscription cleanup or incorrect channel usage.
+Solution: Properly subscribed to postgres_changes and handled cleanup.
+
+🧪 How To Run Locally
+git clone <your-repo-url>
+cd bookmark-manager
 npm install
 
 Create .env.local:
@@ -143,38 +159,35 @@ Create .env.local:
 NEXT_PUBLIC_SUPABASE_URL=your_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_publishable_key
 
-Run:
+Then:
 
 npm run dev
-⚠️ Challenges Faced
-1️⃣ OAuth Redirect Loop
+🌍 Deployment
 
-Issue: Login was redirecting back to login page repeatedly.
-Solution: Corrected Google OAuth redirect URL and cleared local storage session.
+GitHub repository connected to Vercel
 
-2️⃣ 401 Unauthorized Error
+Environment variables configured in Vercel dashboard
 
-Issue: Supabase returned unauthorized on /auth/v1/user.
-Solution: Fixed incorrect project URL and publishable key in supabaseClient.ts.
+Production build auto-deployed from main branch
 
-3️⃣ RLS Policy Conflict
-
-Issue: Policy already existed while creating SQL.
-Solution: Dropped or reused existing policy instead of recreating.
-
-📈 What This Project Demonstrates
-
-Understanding of OAuth flows
-
-Secure database design using RLS
-
-Real-time frontend updates
-
-Deployment readiness
-
-Debugging production auth issues
-
-👨‍💻 Author
+👤 Author
 
 Dhanush Peta
+Full-Stack Developer
+Focused on secure, scalable web applications.
+
 GitHub: https://github.com/Dhanush41916
+
+📈 Key Takeaways
+
+This project demonstrates:
+
+Secure OAuth implementation
+
+Database isolation using RLS
+
+Real-time subscriptions
+
+Full deployment workflow
+
+Git workflow and version control
