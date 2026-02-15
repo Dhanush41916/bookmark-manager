@@ -159,7 +159,7 @@ using (auth.uid() = user_id);
 ## Author
 
 **Dhanush Peta**  
-GitHub: https://github.com/Dhanush41916
+GitHub: https://github.com/Dhanush41916/bookmark-manager
 
 Live Project (Vercel): 
 https://bookmark-manager-three-psi.vercel.app/
